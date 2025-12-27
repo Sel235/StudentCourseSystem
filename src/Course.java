@@ -61,4 +61,22 @@ public class Course {
     public void setCredits(int newCredits){
         this.credits = newCredits;
     }
+
+    public void setCapacity(int newCapacity) throws Exception{
+        if (newCapacity < 0){
+            throw new Exception("Capacity can't be negative");
+        }
+        capacity = newCapacity;
+        while (studentsMainList.size() < capacity && !studentsWaitList.isEmpty()){
+            Student promotedStudent = studentsWaitList.poll();
+            studentsMainList.add(promotedStudent);
+        }
+
+        while(studentsMainList.size() > capacity){
+            int lastIndex = studentsMainList.size() - 1;
+            Student waitListedStudent = studentsMainList.remove(lastIndex);
+            studentsWaitList.addFirst(waitListedStudent);
+        }
+    }
 }
+
