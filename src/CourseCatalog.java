@@ -52,4 +52,14 @@ public class CourseCatalog {
         }
         return waitListedCourses;
     }
+
+    public ArrayList<Course> getCoursesByInstructor(Instructor instructor) {
+        ArrayList<Course> coursesByInstructor = new ArrayList<Course>();
+        for (Course course : getAllCourses()){
+            if (course.getInstructor() == instructor){
+                coursesByInstructor.add(course);
+            }
+        }
+        return coursesByInstructor;
+    }
 }
