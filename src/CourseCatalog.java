@@ -32,4 +32,24 @@ public class CourseCatalog {
         }
         return null;
     }
+
+    public ArrayList<Course> getStudentRegisteredCourses(Student student) {
+        ArrayList<Course> registeredCourses = new ArrayList<Course>();
+        for (Course course: getAllCourses()){
+            if (course.isStudentRegistered(student)){
+                registeredCourses.add(course);
+            }
+        }
+        return registeredCourses;
+    }
+
+    public ArrayList<Course> getStudentWaitListedCourses(Student student) {
+        ArrayList<Course> waitListedCourses = new ArrayList<Course>();
+        for (Course course : getAllCourses()){
+            if (course.isStudentWaitListed(student)){
+                waitListedCourses.add(course);
+            }
+        }
+        return waitListedCourses;
+    }
 }
