@@ -89,10 +89,97 @@ public class StudentSystemCLI {
             System.out.println("Error seeding data: " + e.getMessage());
         }
     }
-    private void listCourses() {}
-    private void addCourse() throws Exception {}
-    private void listAllStudents() {}
-    private void createStudent() {}
+    private void listCourses() {
+        System.out.println("\n--- Course List ---");
+        if (catalog.getAllCourses().isEmpty()) {
+            System.out.println("No courses available.");
+        } else {
+            for (Course c : catalog.getAllCourses()) {
+                System.out.printf(" - %s (Credits: %d, Capacity: %d/%d, Waitlist: %d)%n",
+                        c.getCourseName(), c.getCredits(),
+                        c.getStudentsMainList().size(), c.getCapacity(),
+                        c.getStudentsWaitList().size());
+            }
+        }
+    }
+
+    private void addCourse() throws Exception {
+        System.out.print("Enter Course Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Instructor Name: ");
+        String instructorName = scanner.nextLine();
+
+        Instructor instructor = null;
+        for (Instructor i : allInstructors) {
+            if (i.getFullName().equalsIgnoreCase(instructorName)) {
+                instructor = i;
+                break;
+            }
+        }
+        if (instructor == null) {
+            instructor = new Instructor(instructorName);
+            allInstructors.add(instructor);
+        }
+
+        System.out.print("Enter Capacity: ");
+        int capacity = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter Credits: ");
+        int credits = Integer.parseInt(scanner.nextLine());
+
+        Course newCourse = new Course(name, instructor, capacity, credits);
+        catalog.addCourse(newCourse);
+        System.out.println("Course '" + name + "' added successfully.");
+    }
+
+    private void createStudent() {
+        System.out.print("Enter Student Full Name: ");
+        String fullName = scanner.nextLine();
+        System.out.print("Is this a Graduate Student? (y/n): ");
+        String answer = scanner.nextLine();
+
+        Student newStudent;
+        if (answer.equalsIgnoreCase("y")) {
+            newStudent = new GraduateStudent(fullName);
+        } else {
+            newStudent = new Student(fullName);
+        }
+
+        allStudents.add(newStudent);
+        System.out.println("Student " + fullName + " created");
+    }
+
+    private void listAllStudents() {
+        System.out.println("\n--- Student List ---");
+        if (allStudents.isEmpty()) {
+            System.out.println("No students.");
+            return;
+        }
+        for (int i = 0; i < allStudents.size(); i++) {
+            Student student = allStudents.get(i);
+            System.out.println("[" + i + "] " + student.getFullName());
+        }
+    }
+
+    private Student selectStudent() {
+        if (allStudents.isEmpty()) {
+            System.out.println("No students exist. Please create one first.");
+            return null;
+        }
+        listAllStudents();
+        System.out.print("Enter Student Index: ");
+        try {
+            int index = Integer.parseInt(scanner.nextLine());
+            if (index >= 0 && index < allStudents.size()) {
+                return allStudents.get(index);
+            } else {
+                System.out.println("Invalid index.");
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            return null;
+        }
+    }
     private void registerStudent() throws Exception {}
     private void dropStudent() throws Exception {}
     private void viewStudentCourses() throws Exception {}
@@ -100,5 +187,4 @@ public class StudentSystemCLI {
     private void updateCourseCapacity() throws Exception {}
 
 
-    private Student selectStudent() { return null; }
 }
