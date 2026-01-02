@@ -50,7 +50,45 @@ public class StudentSystemCLI {
     }
 
 
-    private void preLoadData() {}
+    private void preLoadData() {
+        System.out.println("Pre loading system data...");
+        try {
+            Instructor kocatekin = new Instructor("Tuğberk Kocatekin");
+            Instructor emrah = new Instructor("Emrah");
+            Instructor sevgi = new Instructor("Sevgi");
+
+            allInstructors.add(kocatekin);
+            allInstructors.add(emrah);
+            allInstructors.add(sevgi);
+
+            Course oop = new Course("OOP", kocatekin, 4, 3);
+            Course phys101 = new Course("PHYS101 Physics", emrah, 10, 4);
+            Course math101 = new Course("MATH101 Calculus", sevgi, 20, 4);
+
+            catalog.addCourse(oop);
+            catalog.addCourse(phys101);
+            catalog.addCourse(math101);
+
+            Student selin = new Student("Selin");
+            Student ahmet = new Student("Ahmet");
+            Student murat = new Student("Murat");
+            Student mehmet = new GraduateStudent("Mehmet");
+
+            allStudents.add(selin);
+            allStudents.add(ahmet);
+            allStudents.add(murat);
+            allStudents.add(mehmet);
+
+            selin.joinCourse(oop, registration);
+            ahmet.joinCourse(oop, registration);
+            murat.joinCourse(oop, registration);
+            mehmet.joinCourse(phys101, registration);
+            mehmet.joinCourse(math101, registration);
+
+        } catch (Exception e) {
+            System.out.println("Error seeding data: " + e.getMessage());
+        }
+    }
     private void listCourses() {}
     private void addCourse() throws Exception {}
     private void listAllStudents() {}
