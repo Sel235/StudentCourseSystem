@@ -180,11 +180,90 @@ public class StudentSystemCLI {
             return null;
         }
     }
-    private void registerStudent() throws Exception {}
-    private void dropStudent() throws Exception {}
-    private void viewStudentCourses() throws Exception {}
-    private void calculateTuition() throws Exception {}
-    private void updateCourseCapacity() throws Exception {}
+    private void registerStudent() throws Exception {
+        Student student = selectStudent();
+        if (student == null) {
+            System.out.println("Student not found! Please create the student first (Option 4).");
+            return;
+        }
+        System.out.print("Enter Course Name to Join: ");
+        String courseName = scanner.nextLine();
+        Course course = catalog.findCourse(courseName);
 
+        if (course == null) {
+            System.out.println("Course not found.");
+            return;
+        }
+        student.joinCourse(course, registration);
+    }
+
+    private void dropStudent() throws Exception {
+        Student student = selectStudent();
+        if (student == null) return;
+
+        System.out.print("Enter Course Name to Drop: ");
+        String courseName = scanner.nextLine();
+        Course course = catalog.findCourse(courseName);
+
+        if (course == null) {
+            System.out.println("Course not found.");
+            return;
+        }
+        student.dropCourse(course, registration);
+        System.out.println("Dropped " + student.getFullName() + " from " + courseName);
+    }
+
+    private void viewStudentCourses() throws Exception {
+        Student student = selectStudent();
+        if (student == null) return;
+        System.out.println("\n--- Courses for " + student.getFullName() + " ---");
+        ArrayList<Course> registered = student.getRegisteredCourses(catalog);
+        if (registered.isEmpty()) {
+            System.out.println("Registered: None");
+        } else {
+            System.out.println("Registered:");
+            for (Course c : registered) {
+                System.out.println("  - " + c.getCourseName() + " (" + c.getCredits() + " credits)");
+            }
+        }
+        ArrayList<Course> waitlisted = student.getWaitListedCourses(catalog);
+        if (!waitlisted.isEmpty()) {
+            System.out.println("Waitlisted:");
+            for (Course c : waitlisted) {
+                System.out.println("  - " + c.getCourseName() + " (Waiting)");
+            }
+        }
+    }
+
+    private void calculateTuition() throws Exception{
+        Student student = selectStudent();
+        if (student == null) return;
+        double tuition = student.calculateTuition(catalog);
+        System.out.println("Tuition for " + student.getFullName() + ": " + tuition);
+    }
+
+    private void updateCourseCapacity() throws Exception {
+        System.out.print("Enter Course Name: ");
+        String courseName = scanner.nextLine();
+        Course course = catalog.findCourse(courseName);
+        if (course == null) {
+            System.out.println("Course not found.");
+            return;
+        }
+        System.out.println("Current Capacity: " + course.getCapacity());
+        System.out.println("Current Applied: " + course.getStudentsMainList().size() + " Registered, " +
+                course.getStudentsWaitList().size() + " Waitlisted.");
+
+        System.out.print("Enter New Capacity: ");
+        try {
+            int newCapacity = Integer.parseInt(scanner.nextLine());
+            registration.updateCourseCapacity(courseName, newCapacity);
+            System.out.println("Capacity updated successfully.");
+            System.out.println("New Status: " + course.getStudentsMainList().size() + "/" + course.getCapacity() +
+                    " Registered, " + course.getStudentsWaitList().size() + " Waitlisted.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format.");
+        }
+    }
 
 }
