@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The Command Line Interface (CLI) for the Student Registration System.
+ * Handles user interactions, displays menus, and invokes system operations.
+ */
 public class StudentSystemCLI {
     private ArrayList<Student> allStudents = new ArrayList<Student>();
     private ArrayList<Instructor> allInstructors = new ArrayList<Instructor>();
@@ -8,6 +12,10 @@ public class StudentSystemCLI {
     private Registration registration = new Registration(catalog);
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Starts the application loop.
+     * Preloads data and keeps the menu running until the user selects exit.
+     */
     public void start() {
         preLoadData();
         boolean running = true;
@@ -34,6 +42,9 @@ public class StudentSystemCLI {
         }
     }
 
+    /**
+     * Displays the main menu options to the console.
+     */
     public void printMenu(){
         System.out.println("\n=== STUDENT REGISTRATION SYSTEM ===");
         System.out.println("1. List All Courses");
@@ -49,7 +60,10 @@ public class StudentSystemCLI {
         System.out.print("Select an option: ");
     }
 
-
+    /**
+     * Pre-loads the system with sample instructors, courses, and students.
+     * Useful for testing purposes so the system doesn't start empty.
+     */
     private void preLoadData() {
         System.out.println("Pre loading system data...");
         try {
@@ -89,6 +103,10 @@ public class StudentSystemCLI {
             System.out.println("Error seeding data: " + e.getMessage());
         }
     }
+
+    /**
+     * Lists all available courses in the catalog with their details.
+     */
     private void listCourses() {
         System.out.println("\n--- Course List ---");
         if (catalog.getAllCourses().isEmpty()) {
@@ -103,6 +121,10 @@ public class StudentSystemCLI {
         }
     }
 
+    /**
+     * Prompts the user to enter details for a new course and adds it to the system.
+     * @throws Exception If course creation fails.
+     */
     private void addCourse() throws Exception {
         System.out.print("Enter Course Name: ");
         String name = scanner.nextLine();
@@ -131,6 +153,9 @@ public class StudentSystemCLI {
         System.out.println("Course '" + name + "' added successfully.");
     }
 
+    /**
+     * Creates a new student (Undergraduate or Graduate) based on user input.
+     */
     private void createStudent() {
         System.out.print("Enter Student Full Name: ");
         String fullName = scanner.nextLine();
@@ -148,6 +173,9 @@ public class StudentSystemCLI {
         System.out.println("Student " + fullName + " created");
     }
 
+    /**
+     * Displays a numbered list of all registered students.
+     */
     private void listAllStudents() {
         System.out.println("\n--- Student List ---");
         if (allStudents.isEmpty()) {
@@ -160,6 +188,10 @@ public class StudentSystemCLI {
         }
     }
 
+    /**
+     * Helper method to select a student from the list by index.
+     * @return The selected Student object, or null if invalid.
+     */
     private Student selectStudent() {
         if (allStudents.isEmpty()) {
             System.out.println("No students exist. Please create one first.");
@@ -180,6 +212,11 @@ public class StudentSystemCLI {
             return null;
         }
     }
+
+    /**
+     * Registers a selected student to a specific course.
+     * @throws Exception If registration fails.
+     */
     private void registerStudent() throws Exception {
         Student student = selectStudent();
         if (student == null) {
@@ -197,6 +234,10 @@ public class StudentSystemCLI {
         student.joinCourse(course, registration);
     }
 
+    /**
+     * Drops a selected student from a specific course.
+     * @throws Exception If the drop operation fails.
+     */
     private void dropStudent() throws Exception {
         Student student = selectStudent();
         if (student == null) return;
@@ -213,6 +254,10 @@ public class StudentSystemCLI {
         System.out.println("Dropped " + student.getFullName() + " from " + courseName);
     }
 
+    /**
+     * Displays all courses (registered and waitlisted) for a selected student.
+     * @throws Exception If student selection fails.
+     */
     private void viewStudentCourses() throws Exception {
         Student student = selectStudent();
         if (student == null) return;
@@ -235,6 +280,10 @@ public class StudentSystemCLI {
         }
     }
 
+    /**
+     * Calculates and displays tuition fees for a selected student.
+     * @throws Exception If calculation fails.
+     */
     private void calculateTuition() throws Exception{
         Student student = selectStudent();
         if (student == null) return;
@@ -242,6 +291,10 @@ public class StudentSystemCLI {
         System.out.println("Tuition for " + student.getFullName() + ": " + tuition);
     }
 
+    /**
+     * Updates the capacity of a course dynamically.
+     * @throws Exception If the course is not found or input is invalid.
+     */
     private void updateCourseCapacity() throws Exception {
         System.out.print("Enter Course Name: ");
         String courseName = scanner.nextLine();
